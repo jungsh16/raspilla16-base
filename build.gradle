@@ -16,6 +16,11 @@ war {
 }
 
 eclipse {
+	classpath {
+		downloadSources = true
+    	downloadJavadoc = true
+	}
+	
 	wtp {
 		facet {
 		  	facet name: "java", version: "1.8"          // Java version
