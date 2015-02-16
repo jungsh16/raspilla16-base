@@ -59,10 +59,8 @@
 				hibernate.use_sql_comments=true
 			</value>
 		</property>
-		<property name="annotatedClasses">
-			<list>
-				<value>org.hibernate.tutorial.domain.City</value>
-			</list>
+		<property name="packagesToScan">
+			<value>kr.co.tmon</value>
 		</property>
 	</bean>
 
@@ -72,5 +70,14 @@
 		class="org.springframework.orm.hibernate4.HibernateTransactionManager"
 		p:sessionFactory-ref="sessionFactory" />
 
+	<!-- Thread Pool Task Executor -->
+	<bean
+		id="executor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"
+		p:corePoolSize="4"
+		p:maxPoolSize="16"
+		p:queueCapacity="1024" />
+
 	<tx:annotation-driven />
+	<context:component-scan base-package="kr.co.tmon" />
 </beans>

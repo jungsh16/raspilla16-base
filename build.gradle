@@ -1,6 +1,5 @@
 apply plugin: 'java'
-apply plugin: 'war'
-apply plugin: 'eclipse-wtp'
+apply plugin: 'eclipse'
 
 version = '1.0'
 
@@ -11,23 +10,10 @@ tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
 
-war {
-
-}
-
 eclipse {
 	classpath {
 		downloadSources = true
     	downloadJavadoc = true
-	}
-	
-	wtp {
-		facet {
-		  	facet name: "java", version: "1.8"          // Java version
-            facet name: "jst.web", version: "3.1"       // Dynamic Web Application
-            facet name: "jst.jsf", version: "2.2"       // Java Server Faces
-            facet name: "wst.jsdt.web", version: "1.0"  // JavaScript
-		}
 	}
 }
 
@@ -37,12 +23,6 @@ repositories {
 }
 
 dependencies {
-	// Web Spec
-	providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
-	providedCompile 'javax.servlet.jsp:javax.servlet.jsp-api:2.3.1'
-	providedCompile 'javax.el:javax.el-api:3.0.0'
-	providedCompile 'javax.websocket:javax.websocket-api:1.1'
-	
 	// Apache Commons
 	compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'commons-collections:commons-collections:3.2'
@@ -60,16 +40,15 @@ dependencies {
     compile "$SPRING_GROUP:spring-orm:$SPRING_VERSION"
     compile "$SPRING_GROUP:spring-context-support:$SPRING_VERSION"
     compile "$SPRING_GROUP:spring-test:$SPRING_VERSION"
-    compile "$SPRING_GROUP:spring-web:$SPRING_VERSION"
-    compile "$SPRING_GROUP:spring-webmvc:$SPRING_VERSION"
     
     // Hibernate
     compile 'org.hibernate:hibernate-core:4.3.8.Final'
     
     // Json
-    compile 'com.fasterxml.jackson.core:jackson-core:2.4.4'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.4.4'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.4.4'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.5.1'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.5.1'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.5.1'
+	compile 'org.json:json:20141113'
     
     // My SQL
 	compile 'mysql:mysql-connector-java:5.1.34'
