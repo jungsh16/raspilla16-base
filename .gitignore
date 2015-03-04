@@ -4,6 +4,7 @@
 .gradle
 .settings
 .idea
+.springBeans
 
 *.class
 
