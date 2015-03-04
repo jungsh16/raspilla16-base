@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -14,16 +15,17 @@ public class Company implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name = "id", updatable = false)
+	@GeneratedValue
+	@Column(name = "id")
 	private int id;
 
-	@Column(name = "name", updatable = false)
+	@Column(name = "name")
 	private String name;
 
-	@Column(name = "host", updatable = false)
+	@Column(name = "host")
 	private String host;
 
-	@Column(name = "header", updatable = false)
+	@Column(name = "header")
 	private String header;
 
 	@Override

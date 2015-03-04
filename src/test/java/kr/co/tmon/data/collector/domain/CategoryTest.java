@@ -1,8 +1,5 @@
 package kr.co.tmon.data.collector.domain;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.Test;
@@ -16,92 +13,88 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration("classpath:spring/*.xml")
 public class CategoryTest {
 
-	private static final Company COMPANY;
-	private static final int COMPANY_ID = 1;
-	private static final String COMPANY_NAME = "쿠팡";
-	private static final String CATEGORY = "Category";
-	private static final String PARENT_CATEGORY = "ParentCategory";
-	private static final String NAME = "테스트 카테고리";
+	private static final int DEPTH_1 = 1;
+	private static final int DEPTH_2 = 2;
+	private static final int DEPTH_3 = 3;
 
-	private static final Company ANOTHER_COMPANY;
-	private static final int ANOTHER_COMPANY_ID = 2;
-	private static final String ANOTHER_COMPANY_NAME = "티몬";
-	private static final String ANOTHER_CATEGORY = "AnotherCategory";
-	private static final String ANOTHER_PARENT_CATEGORY = "AnotherParentCategory";
-	private static final String ANOTHER_NAME = "다른 테스트 카테고리";
+	private Company company;
 
-	static {
-		COMPANY = new Company();
-		COMPANY.setId(COMPANY_ID);
-		COMPANY.setName(COMPANY_NAME);
+	private Category root;
+	private Category depth1;
+	private Category depth1A;
+	private Category depth1B;
+	private Category depth1C;
+	private Category depth2;
+	private Category depth2A;
+	private Category depth2B;
 
-		ANOTHER_COMPANY = new Company();
-		ANOTHER_COMPANY.setId(ANOTHER_COMPANY_ID);
-		ANOTHER_COMPANY.setName(ANOTHER_COMPANY_NAME);
+	{
+		company = new Company();
+		company.setId(1);
+		company.setName("쿠팡");
+		company.setHost("http://capi.coupang.com");
+
+		root = new Category();
+		root.setCategoryId("0");
+		root.setCompany(company);
+		root.setName("name0");
+		root.setDepth(DEPTH_1);
+
+		depth1 = new Category();
+		depth1.setCategoryId("1");
+		depth1.setCompany(company);
+		depth1.setName("name1");
+		depth1.setDepth(DEPTH_2);
+
+		depth1A = new Category();
+		depth1A.setCategoryId("1A");
+		depth1A.setCompany(company);
+		depth1A.setName("name1A");
+		depth1A.setDepth(DEPTH_3);
+
+		depth1B = new Category();
+		depth1B.setCategoryId("1B");
+		depth1B.setCompany(company);
+		depth1B.setName("name1B");
+		depth1B.setDepth(DEPTH_3);
+
+		depth1C = new Category();
+		depth1C.setCategoryId("1C");
+		depth1C.setCompany(company);
+		depth1C.setName("name1C");
+		depth1C.setDepth(DEPTH_3);
+
+		depth2 = new Category();
+		depth2.setCategoryId("2");
+		depth2.setCompany(company);
+		depth2.setName("name2");
+		depth2.setDepth(DEPTH_2);
+
+		depth2A = new Category();
+		depth2A.setCategoryId("2A");
+		depth2A.setCompany(company);
+		depth2A.setName("name2A");
+		depth2A.setDepth(DEPTH_3);
+
+		depth2B = new Category();
+		depth2B.setCategoryId("2B");
+		depth2B.setCompany(company);
+		depth2B.setName("name2B");
+		depth2B.setDepth(DEPTH_3);
 	}
 
 	@Autowired
 	private SessionFactory sessionFactory;
 
 	@Test
-	public void testCategoryEquals() {
-		Category category = new Category();
-		category.setCompany(COMPANY);
-		category.setCategoryId(CATEGORY);
-		category.setParentCategoryId(PARENT_CATEGORY);
-		category.setName(NAME);
-
-		Category anotherCategory = new Category();
-		anotherCategory.setCompany(COMPANY);
-		anotherCategory.setCategoryId(CATEGORY);
-		anotherCategory.setParentCategoryId(PARENT_CATEGORY);
-		anotherCategory.setName(NAME);
-
-		System.out.println(category);
-		System.out.println(anotherCategory);
-
-		assertTrue(category.equals(category));
-		assertTrue(category.equals(anotherCategory));
-		assertFalse(category.equals(null));
-
-		category.setCompany(null);
-		assertFalse(category.equals(anotherCategory));
-		category.setCompany(COMPANY);
-
-		anotherCategory.setCompany(ANOTHER_COMPANY);
-		assertFalse(category.equals(anotherCategory));
-
-		anotherCategory.setCompany(COMPANY);
-		anotherCategory.setCategoryId(ANOTHER_CATEGORY);
-		assertFalse(category.equals(anotherCategory));
-
-		anotherCategory.setCategoryId(CATEGORY);
-		anotherCategory.setParentCategoryId(ANOTHER_PARENT_CATEGORY);
-		assertFalse(category.equals(anotherCategory));
-
-		anotherCategory.setParentCategoryId(PARENT_CATEGORY);
-		anotherCategory.setName(ANOTHER_NAME);
-		assertFalse(category.equals(anotherCategory));
-
-		anotherCategory.setName(NAME);
-		assertTrue(category.equals(anotherCategory));
-	}
-
-	@Test
 	@Transactional
 	public void testCategory() {
-		Category category = new Category();
-		category.setCompany(COMPANY);
-		category.setCategoryId(CATEGORY);
-		category.setParentCategoryId(PARENT_CATEGORY);
-		category.setName(NAME);
-
 		Session currentSession = sessionFactory.getCurrentSession();
 
-		currentSession.save(category);
+		currentSession.save(root);
 
-		currentSession.get(Category.class, category);
+		currentSession.get(Category.class, root);
 
-		currentSession.delete(category);
+		currentSession.delete(root);
 	}
 }

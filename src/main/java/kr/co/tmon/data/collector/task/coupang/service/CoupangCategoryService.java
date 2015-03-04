@@ -31,14 +31,15 @@ public class CoupangCategoryService {
 		JsonNode coupangJsonNode = JsonUtil.getJsonNode(company, requestUri);
 
 		JsonNode categoryList = coupangJsonNode.findValue(CATEGORY_LIST);
-		List<Category> categoryEntityList = getCategoryEntityList(company, null, categoryList);
+		List<Category> categoryEntityList = getCategoryEntityList(company, null, 1, categoryList);
 
 		categoryDao.saveCategoryList(categoryEntityList);
 
+		//TODO 작업 리스트 반환
 		return null;
 	}
 
-	private List<Category> getCategoryEntityList(Company company, String parentCategoryId, JsonNode categoryList) {
+	private List<Category> getCategoryEntityList(Company company, Category parentCategory, int depth, JsonNode categoryList) {
 		List<Category> resultList = new ArrayList<Category>();
 
 		for (JsonNode node : categoryList) {
@@ -51,20 +52,17 @@ public class CoupangCategoryService {
 			final Category category = new Category();
 			category.setCompany(company);
 			category.setName(name);
+			category.setDepth(depth);
 
 			String categoryId = node.get(CATEGORY_ID).textValue();
 			category.setCategoryId(categoryId);
 
-			if (parentCategoryId == null) {
-				category.setParentCategoryId(categoryId);
-			} else {
-				category.setParentCategoryId(parentCategoryId);
-			}
+			category.setParentCategory(parentCategory);
 
 			resultList.add(category);
 
 			if (node.has(CATEGORY_CHILDREN)) {
-				resultList.addAll(getCategoryEntityList(company, categoryId, node.findValue(CATEGORY_CHILDREN)));
+				resultList.addAll(getCategoryEntityList(company, category, depth + 1, node.findValue(CATEGORY_CHILDREN)));
 			}
 		}
 

@@ -1,12 +1,17 @@
 package kr.co.tmon.data.collector.domain;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.StringUtils;
@@ -26,12 +31,21 @@ public class Category implements Serializable {
 	@Column(name = "cat_id")
 	private String categoryId;
 
-	@Id
-	@Column(name = "p_cat_id")
-	private String parentCategoryId;
-
 	@Column(name = "name")
 	private String name;
+
+	@Column(name = "depth")
+	private int depth;
+
+	@ManyToOne(cascade = { CascadeType.ALL })
+	@JoinColumns({
+	        @JoinColumn(name = "p_c_id"),
+	        @JoinColumn(name = "p_cat_id")
+	})
+	private Category parentCategory;
+
+	@OneToMany(mappedBy = "parentCategory")
+	private Set<Category> childCategories = new HashSet<Category>();
 
 	public Company getCompany() {
 		return company;
@@ -49,14 +63,6 @@ public class Category implements Serializable {
 		this.categoryId = categoryId;
 	}
 
-	public String getParentCategoryId() {
-		return parentCategoryId;
-	}
-
-	public void setParentCategoryId(String parentCategoryId) {
-		this.parentCategoryId = parentCategoryId;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -65,13 +71,35 @@ public class Category implements Serializable {
 		this.name = name;
 	}
 
+	public int getDepth() {
+		return depth;
+	}
+
+	public void setDepth(int depth) {
+		this.depth = depth;
+	}
+
+	public Category getParentCategory() {
+		return parentCategory;
+	}
+
+	public void setParentCategory(Category parentCategory) {
+		this.parentCategory = parentCategory;
+	}
+
+	public Set<Category> getChildCategories() {
+		return childCategories;
+	}
+
+	public void setChildCategories(Set<Category> childCategories) {
+		this.childCategories = childCategories;
+	}
+
 	@Override
 	public int hashCode() {
 		return getClass().hashCode()
 		        + this.company.hashCode()
-		        + this.categoryId.hashCode()
-		        + this.parentCategoryId.hashCode()
-		        + this.name.hashCode();
+		        + this.categoryId.hashCode();
 	}
 
 	@Override
@@ -83,13 +111,12 @@ public class Category implements Serializable {
 		Category category = (Category) object;
 
 		return category.company.equals(this.company)
-		        && StringUtils.equals(this.categoryId, category.categoryId)
-		        && StringUtils.equals(this.parentCategoryId, category.parentCategoryId)
-		        && StringUtils.equals(this.name, category.name);
+		        && StringUtils.equals(this.categoryId, category.categoryId);
 	}
 
 	@Override
 	public String toString() {
-		return "Category [company=" + company + ", categoryId=" + categoryId + ", parentCategoryId=" + parentCategoryId + ", name=" + name + "]";
+		return "Category [company=" + company + ", categoryId=" + categoryId + ", name=" + name + ", depth=" + depth + ", parentCategory=" + parentCategory
+		        + ", childCategories=" + childCategories + "]";
 	}
 }

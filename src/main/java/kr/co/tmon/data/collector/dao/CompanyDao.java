@@ -8,17 +8,24 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
+@Transactional(rollbackFor = { Exception.class })
 public class CompanyDao {
 	@Autowired
 	private SessionFactory sessionFactory;
 
 	@SuppressWarnings("unchecked")
 	public List<Company> getCompanyList() {
-		Session session = sessionFactory.openSession();
+		Session session = sessionFactory.getCurrentSession();
 
-		return session.createQuery("from " + Company.class.getSimpleName()).list();
+		return session.createCriteria(Company.class).list();
 	}
 
+	public void saveCompany(Company company) {
+		Session session = sessionFactory.getCurrentSession();
+
+		session.saveOrUpdate(company);
+	}
 }
